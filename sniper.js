@@ -1,4 +1,9 @@
 const { spawn } = require('child_process');
+const { exec } = require('child_process');
+const path = require('path');
+
+
+///////////////////////// Python run function
 
 function runPythonScript(scriptPath, args) {
     return new Promise((resolve, reject) => {
@@ -21,12 +26,17 @@ function runPythonScript(scriptPath, args) {
 require('dotenv').config();
 const token = process.env['token']
 
-const { Client, Message } = require('discord.js-selfbot-v13');
+const { Client, Message, MessageAttachment } = require('discord.js-selfbot-v13');
 const client = new Client();
+
+const prefix = 'ep-';
 
 client.on('ready', async () => {
   console.log(`@${client.user.username} is ready to snipe chatevents!`);
 })
+
+
+//////////////////////////// chat event sniper //////////////////////////////////////
 
 client.on('messageCreate', (message) => {
   // Check if the message contains any embeds
@@ -37,14 +47,62 @@ client.on('messageCreate', (message) => {
           const names = ['Unscramble event', 'Math event', 'Trivia event', 'Retype event']
           if (names.includes(embed.title)) {
               console.log('Chat Event!!!', embed.title);
-              scriptPath = 'notification.py'
-              args = ['Chat Event Spawned!', embed.title]
+              const scriptPath = 'notification.py'
+              const args = ['Chat Event Spawned!', embed.title]
               runPythonScript(scriptPath, args);
 
           }
       });
   }
 });
+
+////////////////////////// stats bot ///////////////////////////////////
+
+client.on('messageCreate', (message) => {
+    // Check if the message starts with the prefix and is not sent by a bot
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+    // Extract the command and arguments from the message content
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const command = args.shift().toLowerCase();
+
+    // Check if the command is 'runpython'
+    if (command === 'bw') {
+        // Extract the Python script filename and arguments from the message
+        const filepath = path.resolve("D:/Works/Epic Stats/main.py");
+        const outputpath = path.resolve("D:/Works/Epic Stats/output.png");
+        const pythonArgs = args;
+        console.log('loading...')
+
+        // Execute the Python script with the provided arguments
+        exec(`python "${filepath}" ${pythonArgs.join(' ')}`, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`Error executing Python script: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`Python script error output:\n${stderr}`);
+                return;
+            }
+            if (stdout==='Invalid player!') {
+                message.channel.send(`Invalid Player!`);
+                return;
+            }
+            const attachment = new MessageAttachment(outputpath);
+            message.channel.send({ content: stdout, files: [attachment] });
+            console.log('Done.')
+        });
+    }
+});
+
+
+
+
+
+
+
+
+
 
 client.login(token);
 
