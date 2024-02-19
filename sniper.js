@@ -56,7 +56,7 @@ client.on('messageCreate', (message) => {
   }
 });
 
-////////////////////////// stats bot ///////////////////////////////////
+////////////////////////// stats command ///////////////////////////////////
 
 client.on('messageCreate', (message) => {
     // Check if the message starts with the prefix and is not sent by a bot
@@ -66,10 +66,10 @@ client.on('messageCreate', (message) => {
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
-    // Check if the command is 'runpython'
+    // Check if the command is 'bw'
     if (command === 'bw') {
         // Extract the Python script filename and arguments from the message
-        const filepath = path.resolve("D:/Works/Epic Stats/main.py");
+        const filepath = path.resolve("D:/Works/Epic Stats/image.py");
         const outputpath = path.resolve("D:/Works/Epic Stats/output.png");
         const pythonArgs = args;
         console.log('loading...')
@@ -109,4 +109,4 @@ client.login(token);
 
 
 
-//  ily_pichu >w< //
+//  ily_pichu >w< //s
