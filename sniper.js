@@ -68,11 +68,11 @@ client.on('messageCreate', (message) => {
 
     // Check if the command is 'bw'
     if (command === 'bw') {
+        console.log('loading...')
         // Extract the Python script filename and arguments from the message
         const filepath = path.resolve("D:/Works/Epic Stats/image.py");
         const outputpath = path.resolve("D:/Works/Epic Stats/output.png");
         const pythonArgs = args;
-        console.log('loading...')
 
         // Execute the Python script with the provided arguments
         exec(`python "${filepath}" ${pythonArgs.join(' ')}`, (error, stdout, stderr) => {
@@ -88,8 +88,11 @@ client.on('messageCreate', (message) => {
                 message.channel.send(`Invalid Player!`);
                 return;
             }
-            const attachment = new MessageAttachment(outputpath);
-            message.channel.send({ content: stdout, files: [attachment] });
+            if (stdout==='Success') {
+                const attachment = new MessageAttachment(outputpath);
+                message.channel.send({ content: '', files:[attachment]});
+                return;
+            }
             console.log('Done.')
         });
     }
