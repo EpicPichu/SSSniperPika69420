@@ -30,6 +30,8 @@ const { Client, Message, MessageAttachment } = require('discord.js-selfbot-v13')
 const client = new Client();
 
 const prefix = 'ep-';
+const EpicPichu = '598085365815050241';
+
 
 client.on('ready', async () => {
   console.log(`@${client.user.username} is ready to snipe chatevents!`);
@@ -60,14 +62,14 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     // Check if the message starts with the prefix and is not sent by a bot
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    if (!message.content.startsWith(prefix) || message.author.bot ) return;
 
     // Extract the command and arguments from the message content
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
     // Check if the command is 'bw'
-    if (command === 'bw') {
+    if (command === 'bw', message.author.id === EpicPichu) {
         console.log('loading...')
         // Extract the Python script filename and arguments from the message
         const filepath = path.resolve("D:/Works/Epic Stats/image.py");
@@ -84,15 +86,13 @@ client.on('messageCreate', (message) => {
                 console.log(`Python script error output:\n${stderr}`);
                 return;
             }
-            if (stdout==='Invalid player!') {
-                message.channel.send(`Invalid Player!`);
+            if (stdout.trim()==='error') {
+                message.channel.send('Invalid Player!');
+                console.log('Fail.')
                 return;
             }
-            if (stdout==='Success') {
-                const attachment = new MessageAttachment(outputpath);
-                message.channel.send({ content: '', files:[attachment]});
-                return;
-            }
+            const attachment = new MessageAttachment(outputpath);
+            message.channel.send({ content: ' ', files:[attachment]});
             console.log('Done.')
         });
     }
