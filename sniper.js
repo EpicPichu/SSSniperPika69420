@@ -98,12 +98,11 @@ client.on('messageCreate', (message) => {
         if (embed.title === types[0], (lines[0].includes(mathl1))) {
           const result = mathfc(lines[1]);
           if (typeof result !== 'number' || isNaN(result)) {
-            console.log('fail.');
             return;
           }
           if (typeof result == 'number') {
             console.log(lines[1] + ' = ' + result);
-            setTimeout(() => { message.channel.send((result + '')); }, 3000);
+            setTimeout(() => { message.channel.send((result + '')); }, 3420);
           }
         }
 
@@ -123,11 +122,6 @@ client.on('messageCreate', (message) => {
           const result = triviafc(lines[1]);
 
 
-        }
-
-
-        else {
-          console.log("fail.");
         }
       }
     });
