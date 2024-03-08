@@ -32,30 +32,6 @@ function retypefc(str) {
   return p1.replace(/\s(?=\w)|(?<=\w)\s/g, '').replace(/ {2,}/g, ' ');
 }
 
-
-function triviafc(str) {
-
-  const p1 = str.replace(/"/g, "'");
-  const out = "answer this with only the correct answer number like 1 or 2: \n" + p1;
-  let result;
-
-  exec(`python -m pytgpt generate "${out}"`, (error, stderr, sdout) => {
-    if (sdout) {
-      result = sdout;
-      return;
-    }
-    if (error) {
-      console.log(`Error executing Python script: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.log(`Python script error output:\n${stderr}`);
-      return;
-    }
-  });
-  return result;
-}
-
 ////////////////////// constants ////////////////////////////
 
 
@@ -69,7 +45,6 @@ const mathl1 = 'seconds to solve the given riddle:';
 const retypel1 = "seconds to retype the following sentence:";
 const trivial1 = "seconds to answer the following question:";
 const nump = /\d+/;
-const ppath = path.resolve("C:/Users/EpicPichu/Desktop/SSSniperPika69420/notification.py");
 
 
 
@@ -78,15 +53,35 @@ const ppath = path.resolve("C:/Users/EpicPichu/Desktop/SSSniperPika69420/notific
 //////////////////////////// chat event sniper //////////////////////////////////////
 
 client.on('messageCreate', (message) => {
+  if (message.channelId === pikachat, message.author.id === pikabot) {
+    console.log(message.author.username+': '+message.content);
+    if (message.embeds.length>0) {
+      message.embeds.forEach(embed => {
+
+        console.log('Embed Title:', embed.title);
+        console.log('Embed Description:', embed.description);
+        console.log('Embed Author:', embed.author?.name);
+        console.log('Embed Fields:');
+        embed.fields.forEach(field => {
+          console.log(`- ${field.name}: ${field.value}`);
+        });
+        console.log('\n\n');
+      })
+    }
+  }
+});
+
+client.on('messageCreate', (message) => {
   if (message.embeds.length > 0) {
     message.embeds.forEach(embed => {
 
       if (types.includes(embed.title)) {
         console.log('Chat Event!!!', embed.title), '\n';
-        exec(`python "${ppath}"`, (stderr) => {
+        const chev = 'Chat_Event_Spawned!!!'
+        const che2 = embed.title.replace(/\s+/g, '_');
+        exec(`python notification.py ${chev} ${che2}`, (stderr) => {
           if (stderr) {
             console.log(`Python script error output:\n${stderr}`);
-            return;
           }
         });
         
@@ -102,7 +97,7 @@ client.on('messageCreate', (message) => {
           }
           if (typeof result == 'number') {
             console.log(lines[1] + ' = ' + result);
-            setTimeout(() => { message.channel.send((result + '')); }, 3420);
+            setTimeout(() => { message.channel.send((result + '')); }, 3000);
           }
         }
 
@@ -119,9 +114,10 @@ client.on('messageCreate', (message) => {
         //                      Trivia Sniper                           //
 
         if (embed.title === types[2], lines[0].includes(trivial1)) {
-          const result = triviafc(lines[1]);
-
-
+          console.log(embed.description);
+          import('open').then(open => {
+            open.default('https://www.google.com/search?q='+lines[1]);
+          });
         }
       }
     });
