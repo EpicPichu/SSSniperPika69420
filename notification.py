@@ -1,19 +1,23 @@
-import winsound, sys
+import winsound, sys, os
 from plyer import notification
-icon_path = "assets/pika.ico"
+
+dir = os.path.dirname(os.path.abspath(__file__))
+
+icon_path = dir+"/assets/pika.ico"
+soundpath = dir+"/assets/lights_on.wav"
 
 if len(sys.argv) == 3:
     arg1 = sys.argv[1]
     arg2 = sys.argv[2]
 
-def notif(title='Chat Event!', message='chat event spawned!', icon_path="C:/Users/EpicPichu/Desktop/SSSniperPika69420/assets/pika.ico"):
+def notif(title='Chat Event!', message='chat event spawned!', icon=icon_path):
   notification.notify(
     title=title,
     message=message,
-    app_icon=icon_path,
+    app_icon=icon,
     timeout=4
   )
-  winsound.PlaySound('C:/Users/EpicPichu/Desktop/SSSniperPika69420/assets/lights_on.wav', 0)
+  winsound.PlaySound(soundpath, 0)
 
 
 if len(sys.argv) == 1: notif()
