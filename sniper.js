@@ -47,8 +47,6 @@ function unscfc(str) {
 
 
 const token = process.env['token']
-const prefix = 'ep ';
-const EpicPichu = '598085365815050241';
 const pikachat = '234731357903781888';
 const pikabot = '601177246627135507';
 const types = ['Math event', 'Retype event', 'Trivia event', 'Unscramble event'];
@@ -85,7 +83,7 @@ client.on('messageCreate', (message) => {
 //////////////////////////// chat event sniper //////////////////////////////////////
 
 client.on('messageCreate', (message) => {
-  if (message.embeds.length > 0) {
+  if (message.author.id === pikabot && message.embeds.length > 0) {
     message.embeds.forEach(embed => {
 
       if (types.includes(embed.title)) {
@@ -147,72 +145,7 @@ client.on('messageCreate', (message) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////// stats command ///////////////////////////////////
-
-client.on('messageCreate', (message) => {
-  // Check if the message starts with the prefix and is not sent by a bot
-  if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-  // Extract the command and arguments from the message content
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
-  const command = args.shift().toLowerCase();
-
-  // Check if the command is 'bw'
-  if (command === 'bw', message.author.id === EpicPichu) {
-    message.delete();
-    console.log('loading...')
-    const filepath = path.resolve("D:/Works/Epic Stats/image.py");
-    const outputpath = path.resolve("D:/Works/Epic Stats/output.png");
-    const pythonArgs = args;
-
-    // Execute the Python script with the provided arguments
-    exec(`python "${filepath}" ${pythonArgs.join(' ')}`, (error, stdout, stderr) => {
-      if (error) {
-        console.log(`Error executing Python script: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.log(`Python script error output:\n${stderr}`);
-        return;
-      }
-      if (stdout.trim() === 'error') {
-        message.channel.send('Invalid Player!');
-        console.log('Fail.')
-        return;
-      }
-      const attachment = new MessageAttachment(outputpath);
-      message.channel.send({ content: ' ', files: [attachment] });
-      console.log('Done.')
-    });
-  }
-});
-
-
-
-
-
-
-
-
-
-
 client.login(token);
-
-
 
 
 //  ily_pichu >w< //s
